@@ -1,0 +1,41 @@
+name: Enable and verify HTTPS
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Build, test and publish Pages]
+    branches: [main]
+    types: [completed]
+permissions:
+  contents: read
+  pages: write
+concurrency:
+  group: pages-https
+  cancel-in-progress: false
+jobs:
+  secure:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Wait for the GitHub certificate and enable HTTPS
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 80); do
+            state=$(gh api "repos/${GH_REPO}/pages" --jq '.https_certificate.state // "pending"' 2>/dev/null || echo "retry")
+            echo "Certificate check ${attempt}/80: ${state}"
+            if [ "${state}" = "approved" ]; then
+              gh api --method PUT "repos/${GH_REPO}/pages" -F https_enforced=true >/dev/null
+              curl --fail --silent --show-error --retry 12 --retry-delay 10 --retry-all-errors \
+                https://roads.emengin.dev/ --output /tmp/gencebay-roads.html
+              grep -q 'GENCEBAY ROADS' /tmp/gencebay-roads.html
+              echo 'HTTPS is enforced and https://roads.emengin.dev/ returned the game.'
+              exit 0
+            fi
+            gh api "repos/${GH_REPO}/pages/health" --jq '"GitHub DNS check: " + ((.domain.is_valid // false) | tostring)' || true
+            sleep 30
+          done
+          echo 'GitHub has not issued the certificate yet. Re-run this workflow after DNS propagation.'
+          exit 1

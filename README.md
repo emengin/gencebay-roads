@@ -8,6 +8,8 @@ Tarayıcıda çalışan, özgün prosedürel 3D manzaralar arasında sonsuz sür
 
 Yayın GitHub Actions → GitHub Pages üzerinden yapılır. `main` dalına gönderilen her değişiklik otomatik derlenir, test edilir ve yayınlanır. Alan adı için Cloudflare'da `roads` CNAME kaydı `emengin.github.io` hedefine, DNS only (proxy kapalı) olarak yönlendirilmelidir. İlk DNS ve HTTPS sertifikası kurulumu tamamlanana kadar özel alan adı açılmayabilir.
 
+`.github/workflows/https.yml`, başarılı yayından sonra GitHub'ın alan adı sertifikasını bekler; onay geldiğinde HTTPS zorunluluğunu açar ve gerçek adresten oyunun HTML'ini kontrol eder. İlk DNS yayılımı uzun sürerse **Actions → Enable and verify HTTPS → Run workflow** ile tekrar çalıştırılabilir. `.dev` adresinin tarayıcıda açılabilmesi için geçerli HTTPS sertifikası gerekir.
+
 ![Gencebay Roads marka çizimi — oyun ekran görüntüsü değildir](public/social.svg)
 
 ## Hemen oyna — internet gerekmez
