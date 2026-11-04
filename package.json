@@ -1,0 +1,22 @@
+{
+  "name": "gencebay-roads",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Özgün, çevrimdışı çalışabilen 3D sonsuz sürüş oyunu",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "package": "node scripts/package.mjs"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "vite": "6.3.5"
+  },
+  "license": "MIT"
+}

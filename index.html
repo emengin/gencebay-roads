@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="theme-color" content="#e9e6da" />
+    <meta
+      name="description"
+      content="Kendi yolunu bul. Aracını seç ve sonsuz, özgün 3D manzaralar arasında sakin bir yolculuğa çık."
+    />
+    <meta property="og:title" content="GENCEBAY ROADS — Yol nereye götürürse" />
+    <meta
+      property="og:description"
+      content="Bir bitiş çizgisi yok. Sadece sen, araban ve önündeki yol. Ücretsiz 3D sonsuz sürüş deneyimi."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./social.svg" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>GENCEBAY ROADS — Yol nereye götürürse.</title>
+  </head>
+  <body>
+    <canvas
+      id="world"
+      aria-label="Gencebay Roads üç boyutlu sürüş dünyası"
+    ></canvas>
+    <div id="loading" role="status">
+      <div class="loading-mark">G<span>R</span></div>
+      <p>Yollar hazırlanıyor<span class="dots">…</span></p>
+      <small>Birazdan her şey geride kalacak.</small>
+    </div>
+    <div id="error" class="hidden" role="alert">
+      <h1>Yola çıkamadık.</h1>
+      <p id="error-message"></p>
+      <button onclick="location.reload()">Yeniden dene ↗</button>
+    </div>
+    <div id="app" class="garage">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Gencebay Roads ana menü"
+          ><svg viewBox="0 0 36 40" aria-hidden="true">
+            <path d="M9 36 17 4h3l8 32M14 25h10M18 10v5m0 5v5m0 5v6" /></svg
+          ><span>GENCEBAY<small>R O A D S</small></span></a
+        >
+        <div class="top-actions">
+          <span class="edition">SONSUZ BİR YOLCULUK <i></i></span
+          ><button
+            class="icon-button"
+            id="sound"
+            title="Sesi aç / kapat (M)"
+            aria-label="Ses"
+          >
+            ♪</button
+          ><button
+            class="icon-button"
+            id="settings-open"
+            title="Ayarlar"
+            aria-label="Ayarlar"
+          >
+            ⚙
+          </button>
+        </div>
+      </header>
+      <main id="garage-ui">
+        <div class="intro">
+          <div class="eyebrow"><span></span> ACELEMİZ YOK.</div>
+          <h1>Yol nereye<br /><em>götürürse.</em></h1>
+          <p>Bir bitiş çizgisi yok. Sadece sen, araban<br />ve önündeki yol.</p>
+        </div>
+        <section class="garage-config" aria-label="Yolculuğunu hazırla">
+          <div class="section-caption">
+            <span>01 / YOL ARKADAŞIN</span
+            ><span id="vehicle-index">01 — 05</span>
+          </div>
+          <div class="vehicle-picker">
+            <button id="vehicle-prev" class="arrow" aria-label="Önceki araç">
+              ←
+            </button>
+            <div>
+              <h2 id="vehicle-name">Classic Sedan</h2>
+              <p id="vehicle-tagline">Her yolun bir hikâyesi var.</p>
+            </div>
+            <button id="vehicle-next" class="arrow" aria-label="Sonraki araç">
+              →
+            </button>
+          </div>
+          <div class="vehicle-meta">
+            <span id="vehicle-trait">DENGELİ · ARKADAN İTİŞ</span>
+            <div class="swatches" id="colors" aria-label="Araç rengi"></div>
+          </div>
+          <div class="section-caption environment-caption">
+            <span>02 / MANZARANI SEÇ</span><span>↗</span>
+          </div>
+          <div id="biomes" class="biomes">
+            <button data-biome="alpine" class="selected">
+              <span>♧</span> Yeşil tepeler</button
+            ><button data-biome="autumn"><span>❧</span> Sonbahar</button
+            ><button data-biome="snow"><span>❄</span> Karlı dağlar</button
+            ><button data-biome="desert"><span>◇</span> Bozkır</button>
+          </div>
+          <button id="start" class="start-button">
+            <span>YOLCULUĞA BAŞLA</span><span>↗</span>
+          </button>
+          <div class="start-note">
+            <i></i> Hesap yok. Hedef yok. Yol hep var.
+          </div>
+        </section>
+        <div class="scene-label">
+          <span class="location-mark">↗</span>
+          <div>
+            <span id="scene-name">Kuzeyin yeşil yolları</span
+            ><small
+              >PROSEDÜREL DÜNYA <span>·</span> SEED
+              <b class="seed-label">GENCEBAY34</b></small
+            >
+          </div>
+        </div>
+        <div class="orbit-hint">
+          <span>◉</span> Aracını incelemek için sürükle
+        </div>
+        <button id="diary-open" class="diary-link">
+          Yolculuk günlüğün <span>↗</span>
+        </button>
+      </main>
+      <section id="hud" class="hidden" aria-label="Sürüş göstergeleri">
+        <div class="route-chip">
+          <i></i><span id="route-name">YEŞİL TEPELER</span><span> / </span
+          ><b class="seed-label">GENCEBAY34</b>
+        </div>
+        <div class="journey">
+          <span>BU YOLCULUK</span
+          ><strong id="distance">0.00 <small>km</small></strong>
+          <p id="drive-status">Yol senin.</p>
+        </div>
+        <div class="drive-toolbar">
+          <button id="auto" title="Otomatik sürüş (F)">
+            ↝ <span>Otomatik</span></button
+          ><button id="camera" title="Kamera değiştir (C)">
+            ◉ <span id="camera-label">Takip</span></button
+          ><button id="lights" title="Farlar (H)">☼ <span>Farlar</span></button
+          ><button id="reset" title="Yola dön (R)">
+            ↺ <span>Yola dön</span></button
+          ><button id="photo" title="Fotoğraf modu">
+            ▣ <span>Fotoğraf</span></button
+          ><button id="pause" title="Duraklat (P)">
+            Ⅱ <span>Duraklat</span>
+          </button>
+        </div>
+        <div class="speedometer">
+          <svg viewBox="0 0 180 115" aria-hidden="true">
+            <path class="gauge-bg" d="M20 100 A76 76 0 1 1 160 100" />
+            <path id="speed-arc" d="M20 100 A76 76 0 1 1 160 100" /></svg
+          ><span class="gear" id="gear">N</span><strong id="speed">0</strong
+          ><span class="speed-unit">KM / SA</span>
+        </div>
+        <div class="surface-label" id="surface">ASFALT · İYİ YOLCULUKLAR</div>
+      </section>
+      <footer id="help-strip">
+        <span><kbd>W A S D</kbd> Sürüş</span><span><kbd>C</kbd> Kamera</span
+        ><span><kbd>F</kbd> Otomatik sürüş</span
+        ><span><kbd>ESC</kbd> Bir mola</span
+        ><span class="footer-note">BAZEN YOLUN KENDİSİ YETER.</span>
+      </footer>
+      <div id="photo-ui" class="hidden">
+        <div>
+          <span class="eyebrow">GENCEBAY PHOTO MODE</span>
+          <h2>Bu an kalsın.</h2>
+          <p>Sürükle: yörünge · Tekerlek: yakınlaş</p>
+        </div>
+        <button id="photo-save" class="start-button">
+          PNG OLARAK KAYDET ↗</button
+        ><button id="photo-close" class="outline-button">
+          Sürüşe dön · ESC
+        </button>
+      </div>
+      <span id="fps" class="hidden"></span>
+    </div>
+    <dialog id="settings-dialog" aria-labelledby="settings-title">
+      <form method="dialog">
+        <div class="dialog-heading">
+          <div>
+            <span class="eyebrow">KÜÇÜK BİR MOLA</span>
+            <h2 id="settings-title">Yolculuk ayarları</h2>
+          </div>
+          <button class="close-button" aria-label="Kapat">×</button>
+        </div>
+      </form>
+      <div class="settings-grid">
+        <label
+          >Manzara<select id="environment">
+            <option value="alpine">Yeşil tepeler</option>
+            <option value="autumn">Sonbahar</option>
+            <option value="snow">Karlı dağlar</option>
+            <option value="desert">Bozkır</option>
+          </select></label
+        ><label
+          >Günün saati<select id="time">
+            <option value="morning">Sabah</option>
+            <option value="noon">Öğle</option>
+            <option value="sunset">Gün batımı</option>
+            <option value="night">Gece</option>
+          </select></label
+        ><label
+          >Hava<select id="weather">
+            <option value="clear">Açık</option>
+            <option value="cloudy">Bulutlu</option>
+            <option value="fog">Sisli</option>
+            <option value="rain">Yağmur</option>
+            <option value="snow">Kar</option>
+          </select></label
+        ><label
+          >Yol<select id="road">
+            <option value="asphalt">Asfalt</option>
+            <option value="mountain">Dağ yolu</option>
+            <option value="dirt">Toprak yol</option>
+          </select></label
+        ><label
+          >Grafik kalitesi<select id="quality">
+            <option value="low">Low · Düşük</option>
+            <option value="medium">Medium · Orta</option>
+            <option value="high">High · Yüksek</option>
+            <option value="ultra">Ultra</option>
+          </select></label
+        ><label
+          >Dünya kodu
+          <div class="seed-input">
+            <input id="seed" maxlength="40" aria-label="Dünya kodu" /><button
+              id="seed-apply"
+              type="button"
+              title="Dünyayı yeniden oluştur"
+            >
+              ↻
+            </button>
+          </div></label
+        ><label
+          >Ses seviyesi<input
+            id="volume"
+            type="range"
+            min="0"
+            max="100" /></label
+        ><label
+          >Kamera hassasiyeti<input
+            id="sensitivity"
+            type="range"
+            min="20"
+            max="150" /></label
+        ><label
+          >Otomatik sürüş hızı <output id="cruise-output">72 km/sa</output
+          ><input id="cruise" type="range" min="30" max="120" step="2" /></label
+        ><label class="check-label"
+          ><input id="show-fps" type="checkbox" /> FPS göstergesi</label
+        >
+      </div>
+      <details>
+        <summary>Klavye, fare ve gamepad kontrolleri</summary>
+        <p>
+          W / ↑ gaz · S / ↓ fren ve geri · A D / ← → direksiyon · Space el freni
+          · Shift hızlanma · C kamera · R yola dön · F otomatik · H farlar · P /
+          ESC mola · M ses · U arayüz · Fare sürükleme yörünge · Tekerlek
+          yakınlaşma.
+        </p>
+        <p>
+          Gamepad: Sol çubuk direksiyon, RT gaz, LT fren, A el freni. Sekme
+          odağını kaybederse oyun otomatik durur.
+        </p>
+      </details>
+      <div class="dialog-actions">
+        <button id="resume" class="start-button">YOLA DEVAM ET ↗</button
+        ><button id="garage-return" class="outline-button">Garaja dön</button>
+      </div>
+    </dialog>
+    <dialog id="diary-dialog" aria-labelledby="diary-title">
+      <form method="dialog">
+        <div class="dialog-heading">
+          <div>
+            <span class="eyebrow">HER YOL BİR HİKÂYE</span>
+            <h2 id="diary-title">Yolculuk günlüğün</h2>
+          </div>
+          <button class="close-button" aria-label="Kapat">×</button>
+        </div>
+      </form>
+      <div id="diary-content"></div>
+      <p class="diary-note">
+        Anıların bu tarayıcıda saklanır. Veriler bir sunucuya gönderilmez.
+      </p>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
