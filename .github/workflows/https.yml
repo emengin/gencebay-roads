@@ -2,7 +2,7 @@ name: Enable and verify HTTPS
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [Build, test and publish Pages]
+    workflows: ["Build, test and publish Pages"]
     branches: [main]
     types: [completed]
 permissions:
