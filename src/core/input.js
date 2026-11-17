@@ -22,9 +22,14 @@ export class Input {
       )
         return;
       if (
-        ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(
-          e.code,
-        )
+        [
+          "Space",
+          "Escape",
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+        ].includes(e.code)
       )
         e.preventDefault();
       this.keys.add(e.code);

@@ -45,6 +45,7 @@ const allowed = [
   "package-lock.json",
   "vite.config.js",
   "README.md",
+  "PROJECT_STATE.md",
   "SECURITY.md",
   "SUNUM_REHBERI.md",
   "LICENSE",
@@ -68,7 +69,8 @@ const buffers = await Promise.all(
 );
 const manifest = {
   project: "GENCEBAY ROADS",
-  version: "1.0.0",
+  version: JSON.parse(await readFile(path.join(root, "package.json"), "utf8"))
+    .version,
   builtAt: new Date().toISOString(),
   files: files.map((file, i) => ({
     path: file,

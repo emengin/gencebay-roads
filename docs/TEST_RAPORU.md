@@ -1,10 +1,10 @@
 # GENCEBAY ROADS — Doğrulama kapsamı
 
-**17 Kasım 2026 · Güncel kaynak ve Vite 6.4.6 üretim derlemesi**
+**17 Kasım 2026 · v1.0.1 · Vite 6.4.6 üretim derlemesi**
 
 ## Otomatik testler
 
-`npm run build` ve `npm test` başarılıdır: **17/17 test geçti**.
+`npm run build` ve `npm test` başarılıdır: **23/23 test geçti**.
 
 | Kapsam             | Doğrulanan davranış                                                                    |
 | ------------------ | -------------------------------------------------------------------------------------- |
@@ -22,6 +22,18 @@
 Fizik ve geometri testleri hızlandırılmış simülasyonlardır; saatlerce gerçek zamanlı kullanım veya belirli bir FPS garantisi anlamına gelmez.
 
 ## Chromium tarayıcı kontrolü
+
+### Sürüş titremesi regresyonu
+
+90 Hz fizik pozlarını doğrudan çizmek 60/144 Hz ekranlarda düzensiz hareket oluşturuyordu. Son iki fizik pozu arasında çizim interpolasyonu eklendi; kamera aynı çizim pozunun ötelemesini takip eder. Gövdenin pürüzsüz zeminde de çalışan yapay sinüs hareketi kaldırıldı. Gerçek arazi teması, yük aktarımı ve tekerlek animasyonları korunur; fizik adımları değiştirilmez.
+
+Altı yeni otomatik regresyon 30/60/75/90/120/144/165/240 Hz, değişken kare süreleri, geri sürüş, yön açısı sarması, reset, beş modelde düz yol/yük aktarımı, takip/yakın/kokpit kadrajı ve origin geçişini kapsar. Sabit hızlı düz yol fikstüründe 60/144 Hz araç kadrajının dikey aralığı önce yaklaşık 1.94/3.38 pikselken yeni çizimde kayan nokta hassasiyeti düzeyindedir.
+
+Gerçek Chromium'da önceki ve yeni üretim paketiyle 180'er çizim karesi ölçüldü. Kareler arası ilerlemenin beklenen hıza göre p95 hatası %33.87'den %0.024'e indi. Bu bir kare hareketi ölçümüdür; her cihazda sabit FPS garantisi değildir. Pause sırasında konum/gövde animasyonu dondu; dört kamera, kurtarma, 2048 m origin geçişi ve PNG indirme geçti. Ölçüm erişimi yalnızca özel yerel test yanıtına eklenir; oyunun kaynak veya üretim dosyalarında test/debug API'si bulunmaz.
+
+Escape ile açılan mola ekranının aynı olayın native dialog davranışıyla hemen kapanması da engellendi ve tarayıcıda doğrulandı.
+
+### Genel oynanış
 
 1366×900 masaüstü görünümünde üretim paketi bir alt klasörden açıldı. Garajda araç değişimi, klavyeyle hızlanma, otomatik sürüş, kamera değişimi, gece/yağmur ayarları ve PNG fotoğraf indirme çalıştı. Normal oynanış sırasında JavaScript veya shader hatası gözlenmedi; gece/yağmur sürüşü ve fotoğraf çıktısı görsel olarak incelendi.
 

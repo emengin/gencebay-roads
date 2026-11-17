@@ -667,12 +667,9 @@ export class VehicleModel {
     );
     this.body.position.y = THREE.MathUtils.damp(
       this.body.position.y,
-      -state.accel * 0.004 +
-        Math.sin(state.distance * 1.6) *
-          Math.min(
-            state.offroad ? 0.035 : 0.006,
-            Math.abs(state.speed) * 0.002,
-          ),
+      // Terrain contact and acceleration provide suspension motion; a periodic
+      // distance-based bob made even perfectly smooth asphalt visibly shake.
+      -state.accel * 0.004,
       this.spec.suspension,
       dt,
     );

@@ -16,6 +16,9 @@ export class CameraController {
     this.photoDistance = 8;
     this.resetNext = true;
     this.elapsed = 0;
+    this.previousVehiclePosition = new THREE.Vector3();
+    this.vehicleShift = new THREE.Vector3();
+    this.previousPhase = null;
   }
   cycle() {
     this.mode = (this.mode + 1) % 4;
@@ -25,10 +28,32 @@ export class CameraController {
   reset() {
     this.resetNext = true;
   }
+  rebase(dx, dz) {
+    this.camera.position.x -= dx;
+    this.camera.position.z -= dz;
+    if (this.lookAt) {
+      this.lookAt.x -= dx;
+      this.lookAt.z -= dz;
+    }
+    this.previousVehiclePosition.x -= dx;
+    this.previousVehiclePosition.z -= dz;
+  }
   update(dt, vehicle, state, phase, input, settings, aspect) {
     this.elapsed += dt;
     const camera = this.camera,
       look = input.consumeLook();
+    const reset = this.resetNext;
+    if (!reset && phase === "drive" && this.previousPhase === "drive") {
+      // Inherit translation exactly; smooth changes of framing rather than lagging
+      // behind a moving car at a different cadence from its look target.
+      this.vehicleShift
+        .copy(vehicle.root.position)
+        .sub(this.previousVehiclePosition);
+      camera.position.add(this.vehicleShift);
+      this.lookAt?.add(this.vehicleShift);
+    }
+    this.previousVehiclePosition.copy(vehicle.root.position);
+    this.previousPhase = phase;
     if (phase === "garage" || phase === "photo") {
       this.orbit -= look.x * settings.sensitivity;
       this.elevation = clamp(
@@ -146,7 +171,7 @@ export class CameraController {
           : 52 + Math.min(Math.abs(state.speed) * 0.12, 5);
       }
     }
-    if (this.resetNext || (this.mode === 2 && phase === "drive")) {
+    if (reset || (this.mode === 2 && phase === "drive")) {
       camera.position.copy(position);
       this.resetNext = false;
     } else
@@ -156,7 +181,8 @@ export class CameraController {
       );
     // Smoothed target avoids jitter while pitch changes on rough terrain.
     if (!this.lookAt) this.lookAt = target.clone();
-    this.lookAt.lerp(target, 1 - Math.exp(-10 * dt));
+    else if (reset) this.lookAt.copy(target);
+    else this.lookAt.lerp(target, 1 - Math.exp(-10 * dt));
     if (this.mode === 2 && phase === "drive") this.lookAt.copy(target);
     camera.lookAt(this.lookAt);
     camera.updateProjectionMatrix();

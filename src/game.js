@@ -7,6 +7,10 @@ import { VehicleModel } from "./vehicles/factory.js";
 import { VehiclePhysics } from "./vehicles/physics.js";
 import { VEHICLES } from "./vehicles/catalog.js";
 import { CameraController, CAMERA_NAMES } from "./render/camera.js";
+import {
+  VehiclePresentation,
+  PHYSICS_STEP,
+} from "./render/vehicle-presentation.js";
 import { Atmosphere } from "./render/atmosphere.js";
 import { AudioManager } from "./audio/audio.js";
 import { UI } from "./ui/ui.js";
@@ -64,6 +68,7 @@ export class Game {
     );
     this.scene.add(this.model.root);
     this.physics = new VehiclePhysics(this.model.spec, this.route);
+    this.presentation = new VehiclePresentation(this.physics.state);
     this.input = new Input(
       (action) => this.action(action),
       () => this.onBlur(),
@@ -89,8 +94,13 @@ export class Game {
     this.frame = this.frame.bind(this);
     requestAnimationFrame(this.frame);
   }
-  syncModel() {
-    const s = this.physics.state,
+  syncModel(state) {
+    if (!state) {
+      this.accumulator = 0;
+      this.presentation.reset(this.physics.state);
+      state = this.presentation.state;
+    }
+    const s = state,
       o = this.world.origin;
     this.model.root.position.set(s.x - o.x, s.y, s.z - o.z);
     this.model.root.rotation.set(-s.pitch, s.yaw, s.roll, "YXZ");
@@ -120,6 +130,7 @@ export class Game {
     this.input.clear();
     this.cameraController.reset();
     this.world.update(0, true);
+    this.syncModel();
     this.ui.phase("drive");
     this.ui.driveControls();
     this.settings.diary.trips++;
@@ -288,23 +299,29 @@ export class Game {
       }
       this.accumulator += dt;
       let moved = 0;
-      while (this.accumulator + 1e-10 >= 1 / 90) {
+      while (this.accumulator + 1e-10 >= PHYSICS_STEP) {
         const input = this.auto
           ? this.physics.autopilot(this.settings.value.cruise)
           : raw;
         const before = this.physics.state.distance;
-        this.physics.step(1 / 90, input, this.settings.value.weather);
+        this.presentation.capture(this.physics.state);
+        this.physics.step(PHYSICS_STEP, input, this.settings.value.weather);
         moved += this.physics.state.distance - before;
-        this.accumulator -= 1 / 90;
+        this.accumulator -= PHYSICS_STEP;
       }
       this.settings.diary.total += moved;
       this.settings.diary.longest = Math.max(
         this.settings.diary.longest,
         this.physics.state.distance,
       );
-      this.model.animate(this.physics.state, dt, this.route);
-    } else this.accumulator = 0;
+    }
     const s = this.physics.state;
+    // Preserve the same interpolated pose while paused or taking a photograph.
+    const presented = this.presentation.sample(
+      s,
+      this.accumulator / PHYSICS_STEP,
+    );
+    if (driving) this.model.animate(presented, dt, this.route);
     // Physical coordinates remain doubles; render coordinates stay close to zero.
     if (
       Math.abs(s.z - this.world.origin.z) > 2048 ||
@@ -315,21 +332,16 @@ export class Game {
         dx = x - this.world.origin.x,
         dz = z - this.world.origin.z;
       this.world.setOrigin(x, z);
-      this.camera.position.x -= dx;
-      this.camera.position.z -= dz;
-      if (this.cameraController.lookAt) {
-        this.cameraController.lookAt.x -= dx;
-        this.cameraController.lookAt.z -= dz;
-      }
+      this.cameraController.rebase(dx, dz);
     }
     this.world.update(s.z, false, s.x);
-    this.syncModel();
+    this.syncModel(presented);
     this.model.lighting(this.lights, this.atmosphere.night, s.braking);
     if (!this.paused)
       this.cameraController.update(
         dt,
         this.model,
-        s,
+        presented,
         this.phase,
         this.input,
         this.settings.value,
