@@ -2,7 +2,7 @@ name: Enable and verify HTTPS
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Build, test and publish Pages"]
+    workflows: ['Build, test and publish Pages']
     branches: [main]
     types: [completed]
 permissions:
@@ -27,7 +27,9 @@ jobs:
             state=$(gh api "repos/${GH_REPO}/pages" --jq '.https_certificate.state // "pending"' 2>/dev/null || echo "retry")
             echo "Certificate check ${attempt}/80: ${state}"
             if [ "${state}" = "approved" ]; then
-              gh api --method PUT "repos/${GH_REPO}/pages" -F https_enforced=true >/dev/null
+              if [ "$(gh api "repos/${GH_REPO}/pages" --jq '.https_enforced')" != "true" ]; then
+                gh api --method PUT "repos/${GH_REPO}/pages" -F https_enforced=true >/dev/null
+              fi
               curl --fail --silent --show-error --retry 12 --retry-delay 10 --retry-all-errors \
                 https://roads.emengin.dev/ --output /tmp/gencebay-roads.html
               grep -q 'GENCEBAY ROADS' /tmp/gencebay-roads.html

@@ -26,4 +26,6 @@ Gerçek Chromium'da aynı otomatik sürüşün önce/sonra ölçümünde kare ha
 
 `main` push'unda GitHub Actions bağımlılık denetimi, build, test, paket ve Pages yayını yapar. CSP, SHA ile sabitlenmiş Actions, en az yetki ve mevcut güvenlik kontrolleri korunmalıdır. Yalnızca GENCEBAY ROADS kapsamındadır; diğer oyunlarda değişiklik yapılmaz.
 
+HTTPS doğrulaması, HTTPS zaten zorunluyken ayarı tekrar yazmaya çalışmaz. Gereksiz yönetim API çağrısının GITHUB_TOKEN ile 403 üretmesi böylece önlenir; sertifika ve canlı adres denetimi korunur.
+
 Fizik arcade modelidir. Gerçek telefon/gamepad, bütün tarayıcılar ve her donanımda FPS garantisi yoktur. Önceki güvenlik bakımının ve desteklenen özelliklerin ayrıntıları README, SECURITY ve test raporundadır.
