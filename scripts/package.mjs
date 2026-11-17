@@ -45,6 +45,7 @@ const allowed = [
   "package-lock.json",
   "vite.config.js",
   "README.md",
+  "SECURITY.md",
   "SUNUM_REHBERI.md",
   "LICENSE",
   "THIRD_PARTY_NOTICES.md",

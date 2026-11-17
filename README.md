@@ -1,122 +1,109 @@
 # GENCEBAY ROADS
 
-**Yol nereye götürürse.** Bir bitiş çizgisi yok. Sadece sen, araban ve önündeki yol.
+Aracınızı seçin ve sürekli üretilen üç boyutlu manzaralar arasında kendi temponuzda yolculuk yapın. Yarış, süre sınırı veya bitiş çizgisi olmadan; virajlar, değişen hava ve farklı gün saatleriyle sakin bir sürüş deneyimi.
 
-Tarayıcıda çalışan, özgün prosedürel 3D manzaralar arasında sonsuz sürüş oyunu. BİLP1117 Web Programlama I dönem projesi için HTML, CSS ve anlaşılabilir JavaScript modülleriyle geliştirildi. Backend, hesap, API anahtarı veya internet bağlantısı gerektirmez.
+**[Hemen oynayın → roads.emengin.dev](https://roads.emengin.dev/)**
 
-**Kaynak kod:** [emengin/gencebay-roads](https://github.com/emengin/gencebay-roads) · **Canlı adres:** [roads.emengin.dev](https://roads.emengin.dev/)
+Oyun masaüstü tarayıcılar için tasarlanmıştır. Hesap, ücretli API veya ek oyun kurulumu gerekmez. İndirilen sürüm yerel olarak çevrimdışı çalışabilir.
 
-Yayın GitHub Actions → GitHub Pages üzerinden yapılır. `main` dalına gönderilen her değişiklik otomatik derlenir, test edilir ve yayınlanır. Alan adı için Cloudflare'da `roads` CNAME kaydı `emengin.github.io` hedefine, DNS only (proxy kapalı) olarak yönlendirilmelidir. İlk DNS ve HTTPS sertifikası kurulumu tamamlanana kadar özel alan adı açılmayabilir.
+![GENCEBAY ROADS marka çizimi; oyun ekran görüntüsü değildir](public/social.svg)
 
-`.github/workflows/https.yml`, başarılı yayından sonra GitHub'ın alan adı sertifikasını bekler; onay geldiğinde HTTPS zorunluluğunu açar ve gerçek adresten oyunun HTML'ini kontrol eder. İlk DNS yayılımı uzun sürerse **Actions → Enable and verify HTTPS → Run workflow** ile tekrar çalıştırılabilir. `.dev` adresinin tarayıcıda açılabilmesi için geçerli HTTPS sertifikası gerekir.
+## Oyun özellikleri
 
-![Gencebay Roads marka çizimi — oyun ekran görüntüsü değildir](public/social.svg)
-
-## Hemen oyna — internet gerekmez
-
-1. ZIP dosyasının **tamamını** bir klasöre çıkarın.
-2. Windows'ta **`BASLAT.cmd`** dosyasını çift tıklayın. Node/npm/Python kurulumu gerekmez.
-3. Oyun `http://127.0.0.1:4173` adresinde açılır. Açılmazsa adresi tarayıcıya yazın.
-4. Aracınızı ve rengini seçip **YOLCULUĞA BAŞLA** düğmesine basın. W gaz, F otomatik sürüş.
-5. Sunucuyu durdurmak için başlatıcının penceresini kapatın.
-
-Linux/macOS: Python 3 veya Node.js kuruluysa `sh baslat.sh`. Tarayıcıda aynı adresi açın. Python/Node kurulumu sunum gününden önce yapılmalıdır; sunucu çalışırken internet kullanmaz.
-
-`index.html` dosyasını `file://` ile doğrudan açmayın. ES modülleri için localhost sunucusu gerekir. Tüm oyun dosyaları `dist/` içinde hazırdır; **oynamak için npm install veya npm build çalıştırılmaz.**
-
-## Özellikler
-
-- Gerçek Three.js/WebGL 2 sahnesi ve dünya koordinatlarında hareket eden araç.
-- Classic Sedan, Sport Coupe, Off-Road 4×4, Pickup Truck ve Retro Classic. Ayrı gövde profilleri, farklı boyutlar, camlar, iç mekân, jantlar, lambalar, açık pickup kasası, SUV aksesuarları.
-- Her aracın arka tamponuna bağlı, `34 GENCEBAY 34` yazılı CanvasTexture plaka. Gece emissive plaka ve yerel aydınlatma.
-- Seed ile deterministik Catmull–Rom yol, noise tabanlı arazi, vadiler, göl havzaları ve orman kümeleri.
-- 160 metrelik yol çevresi parça sistemi; uzak arazi sürüşünde oyuncuyu izleyen ek terrain penceresi. Gerideki parçaların GPU kaynakları dispose edilir. InstancedMesh ağaç, çim, kaya ve yol kenarı dikmeleri. Floating origin.
-- Asfalt, dağ ve toprak yolu; manuel yol dışı sürüş ve farklı tutuş.
-- 90 Hz sabit adımlı arcade fizik; gaz, fren/geri, el freni, yokuş etkisi, kütleye bağlı direksiyon tepkisi ve görsel süspansiyon.
-- Dört kamera: takip, yakın takip, kokpit, sinematik. Fareyle yörünge ve tekerlekle yakınlaşma.
-- Pure pursuit otomatik sürüş; viraja göre hedef hızını azaltır. Manuel kontrol otomatiği devralır.
-- Dört manzara, dört gün saati ve beş hava seçeneği. Yağmur/kar parçacıkları, gece yıldızları, gerçek SpotLight farlar.
-- Low/Medium/High/Ultra: çözünürlük, çizim mesafesi, bitki yoğunluğu, gölgeler ve parçacık sayısını değiştirir.
-- 3D garaj, renk seçimi, fotoğraf modu ve arayüzsüz PNG indirme.
-- Yerel yolculuk günlüğü: toplam/en uzun mesafe, sefer sayısı, son araç, manzara ve seed.
-- Web Audio motor, lastik/rüzgâr, yağmur, fren ve kuş sesi sentezi. Ses kullanıcı etkileşimiyle başlar.
-- Türkçe arayüz; klavye, fare ve standart gamepad eksen/tetik desteği.
+- **Beş araç:** Classic Sedan, Sport Coupe, Off-Road 4×4, Pickup Truck ve Retro Classic. Farklı boyutlar, gövde tasarımları ve sürüş parametreleri.
+- **Sonsuz yolculuk:** Dünya koduna göre oluşturulan yollar, arazi, vadiler ve bitki örtüsü. Aynı kod ve rota türü aynı güzergâhı üretir.
+- **Farklı ortamlar:** Dört manzara, asfalt/dağ/toprak yolları, dört gün saati ve beş hava seçeneği.
+- **Manuel veya otomatik sürüş:** Direksiyonu kontrol edin ya da yolu takip eden otomatik sürüşü açın. Manuel direksiyon girdisi kontrolü devralır.
+- **Dört kamera:** Takip, yakın takip, kokpit ve sinematik görünüm.
+- **Garaj ve fotoğraf:** Araç/rengini seçme, serbest fotoğraf kamerası ve arayüzsüz PNG indirme.
+- **Atmosfer:** Yağmur ve kar parçacıkları, gece yıldızları, araç farları ve sürüşe tepki veren sesler.
+- **Yerel yolculuk günlüğü:** Toplam mesafe, en uzun yolculuk, sefer sayısı ve son seçimler bu tarayıcıda saklanır.
+- **Ayarlanabilir grafikler:** Düşük, Orta, Yüksek ve Ultra kalite; çözünürlük, görüş mesafesi, bitki örtüsü, gölgeler ve parçacık yoğunluğu ayarlanır.
 
 ## Kontroller
 
-| Girdi | İşlev |
-| --- | --- |
-| W / ↑ | Gaz |
-| S / ↓ | Fren; durduktan sonra basılı tutunca geri vites |
-| A D / ← → | Direksiyon |
-| Space | El freni |
-| Shift | Geçici yüksek hız sınırı |
-| C | Kamera |
-| Fare sürükleme | Garaj/fotoğraf yörüngesi; sürüşte etrafa bakma |
-| Fare tekerleği | Takip/garaj/fotoğraf yakınlığı |
-| F | Yolu izleyen otomatik sürüş |
-| R | Mevcut güzergâhta yola dön |
-| H | Farlar |
-| P / Escape | Mola/ayarlar; fotoğraftan çıkış |
-| M | Ses |
-| U | Sürüş arayüzünü gizle/göster |
-| Gamepad sol çubuk / RT / LT / A | Direksiyon / gaz / fren / el freni |
+Garajdan araç ve renk seçip **YOLCULUĞA BAŞLA** düğmesine basın.
 
-Fareyle Ayarlar → dünya kodunu değiştir → ↻: aynı seed ile aynı dünyayı yeniden oluşturur. Yol türü de güzergâh parametresidir. Manzara, hava ve grafik seçenekleri gerçek sahneyi etkiler. Sekme odağı kaybolursa sürüş durur; ayarları kapatınca devam eder.
+| Kontrol                         | İşlev                                             |
+| ------------------------------- | ------------------------------------------------- |
+| W / ↑                           | Gaz                                               |
+| S / ↓                           | Fren; durduktan sonra basılı tutulursa geri vites |
+| A D / ← →                       | Direksiyon                                        |
+| Boşluk                          | El freni                                          |
+| Shift                           | Geçici yüksek hız sınırı                          |
+| C                               | Kamera değiştir                                   |
+| F                               | Otomatik sürüşü aç / kapat                        |
+| R                               | Mevcut güzergâhta yola dön                        |
+| H                               | Farlar                                            |
+| P / Esc                         | Mola / ayarlar; fotoğraf modundan çıkış           |
+| M                               | Sesi aç / kapat                                   |
+| U                               | Sürüş arayüzünü gizle / göster                    |
+| Fareyle sürükleme / tekerlek    | Çevreye bakış, yörünge ve yakınlaştırma           |
+| Gamepad sol çubuk / RT / LT / A | Direksiyon / gaz / fren / el freni                |
+
+Gamepad desteği tarayıcıya ve cihaz eşlemesine bağlıdır. Sekme odağı kaybolduğunda sürüş duraklar. Ses, ilk kullanıcı etkileşiminden sonra başlar.
+
+## Kullanılan teknolojiler
+
+| Teknoloji                                       | Kullanım                                                          |
+| ----------------------------------------------- | ----------------------------------------------------------------- |
+| HTML5, CSS ve JavaScript ES modülleri           | Türkçe arayüz, oyun akışı ve modüler kaynak kodu                  |
+| Three.js 0.180.0 ve WebGL 2                     | Üç boyutlu dünya, araç geometrileri, ışık, gölge ve parçacıklar   |
+| Catmull–Rom eğrileri ve deterministik noise     | Tekrarlanabilir yol güzergâhları ve prosedürel arazi              |
+| 90 Hz sabit adımlı arcade fizik                 | Gaz, fren, geri vites, tutuş ve direksiyon tepkisi                |
+| InstancedMesh, parça sistemi ve floating origin | Tekrarlanan çevre nesneleri ve uzun yolculuklarda kaynak yönetimi |
+| Pure pursuit                                    | Virajlara göre hızını ayarlayan otomatik yol takibi               |
+| Web Audio API                                   | Motor, lastik, rüzgâr, yağmur ve kuş seslerinin sentezi           |
+| localStorage ve Canvas                          | Yerel ayarlar/günlük ve fotoğraf çıktısı                          |
+| Vite 6.4.6 ve Node.js                           | Geliştirme, üretim derlemesi ve otomatik testler                  |
+| GitHub Actions ve GitHub Pages                  | Test edilen statik oyunun HTTPS üzerinden yayınlanması            |
+
+Üretim oyunu uzak model, font, müzik, analiz hizmeti veya API anahtarı kullanmaz. Araçlar ve çevre kodla oluşturulur; çalışma sırasında harici yapay zekâ servisine bağlanılmaz.
+
+## Bilgisayarda çevrimdışı oynama
+
+Depodaki **Code → Download ZIP** seçeneğiyle dosyaları indirin ve arşivin tamamını çıkarın.
+
+- **Windows:** `BASLAT.cmd` dosyasını açın. Hazır `dist` sürümü yalnızca bu bilgisayarda, `http://127.0.0.1:4173` adresinde sunulur. Node.js veya Python kurulumu gerekmez.
+- **Linux/macOS:** Python 3 veya Node.js kuruluysa `sh baslat.sh` komutunu çalıştırın.
+- Sunucuyu durdurmak için terminal penceresini kapatın veya Ctrl+C kullanın.
+
+`index.html` dosyasını doğrudan çift tıklamak yerine başlatıcıyı kullanın; ES modülleri HTTP sunucusu gerektirir. Oynamak için npm kurulumu veya yeniden derleme gerekmez.
 
 ## Geliştirme
 
-Node.js 22 önerilir (Vite 6 için Node 18/20/22 desteği vardır).
+Node.js 24 LTS önerilir:
 
 ```sh
 npm ci
 npm run dev
-npm test
+```
+
+Üretim sürümü ve doğrulama:
+
+```sh
 npm run build
+npm test
+npm audit
 npm start
 ```
 
-`npm run dev` Vite geliştirme sunucusunu; `npm start` yalnızca hazır `dist` dosyalarını 4173 portunda sunar. Windows PowerShell alternatifi: `powershell -File scripts/serve.ps1 -Port 4174`. Geliştirme bağımlılıklarının ilk kurulumu internet ister; derlenmiş oyun istemez. Bu çalışma ortamında Node PATH'te olmadığı için proje içi `.tools` kullanılmıştır; `.tools` dağıtımın parçası değildir.
+`npm start` hazır `dist/` klasörünü yerel olarak sunar. `npm run package` kaynak ve derlemeyi `release/GENCEBAY-ROADS-teslim.zip` arşivine toplar.
 
-## Mimari
+Kaynak kodunda `src/world` yol/çevreyi, `src/vehicles` modelleri ve fiziği, `src/render` kamerayı/atmosferi, `src/ui` arayüzü, `src/audio` sesi yönetir. `tests` otomatik doğrulamaları içerir. [Teknik işleyiş](SUNUM_REHBERI.md) ve [test kapsamı](docs/TEST_RAPORU.md) ayrıca belgelenmiştir.
 
-| Dosya / klasör | Sorumluluk |
-| --- | --- |
-| `index.html`, `src/style.css`, `src/ui.css` | Erişilebilir arayüz ve görünüm |
-| `src/game.js` | Sahne, 90 Hz fizik döngüsü, parçalar, floating origin, oyun durumları |
-| `src/world/route.js` | Seed, spline güzergâh, yol–zemin eşlemesi, yükseklik ve göl havzaları |
-| `src/world/world.js` | Gerçek mesh parçaları, instancing, yol çizgileri ve kaynak temizliği |
-| `src/vehicles/catalog.js` | Beş aracın boyut ve fizik parametreleri |
-| `src/vehicles/factory.js` | Loft gövdeler, ayrıntılar, tekerlekler, iç mekân, plaka ve farlar |
-| `src/vehicles/physics.js` | Hız, tutuş, bisiklet modeli ve pure pursuit |
-| `src/render/` | Kamera, gökyüzü shader'ı, sis, ışık ve yağış |
-| `src/core/` | Girdi, deterministik matematik, ayarlar ve günlük |
-| `src/audio/`, `src/ui/` | Sentezlenen ses ve DOM etkileşimleri |
-| `tests/` | Fizik, deterministik dünya, plaka/geometri, kaynak ömrü testleri |
-| `scripts/` | Çevrimdışı sunucular ve teslim paketi |
+## Yayınlama
 
-Detaylı açıklamalar: [SUNUM_REHBERI.md](SUNUM_REHBERI.md) · [Referans ve teknik kararlar](docs/REFERANS_ANALIZI.md) · [Test raporu](docs/TEST_RAPORU.md).
+`npm run build` sonrasında `dist/` içeriği statik bir sunucuda yayınlanabilir. Göreli asset adresleri (`base: './'`) kök veya alt klasörde çalışır. Node.js hizmeti, veritabanı veya sunucu taraflı yönlendirme gerekmez.
 
-## Alan adına ve GitHub Pages'e yükleme
+Bu depoda `main` güncellemeleri GitHub Actions ile derlenip test edilir ve GitHub Pages'e yayınlanır. Özel alan adı ve HTTPS ayarları deponun **Settings → Pages** bölümünden yönetilir. Kaynak değiştirildiğinde hash'li JS/CSS dosyaları HTML ile birlikte yayınlanmalıdır.
 
-`npm run build` sonrasında `dist/` klasörünün **içindekileri** statik hosting'in web köküne veya bir alt klasöre yükleyin. Vite `base: './'` kullanır; alt klasöre dağıtımı destekler. Sunucu tarafı yönlendirme, veritabanı veya Node hizmeti gerekmez. HTTPS önerilir. Cache nedeniyle güncelleme görünmezse tarayıcı önbelleğini yenileyin. `dist` içindeki hash'li JS ve CSS dosyalarını index ile birlikte taşıyın.
+## Gizlilik, güvenlik ve desteklenen deneyim
 
-GitHub deposu [emengin/gencebay-roads](https://github.com/emengin/gencebay-roads) olarak oluşturuldu; Pages kaynağı **GitHub Actions** olarak ayarlandı. `.gitignore` bağımlılıkları ve yerel araçları hariç tutar. Kaynak, lisans, kilit dosyası ve `dist` repoda bulunur. `.github/workflows/pages.yml`, `main` dalında build + test + teslim ZIP'i + Pages yayını yapar. Her yayının durumunu reponun **Actions** bölümünden görebilirsiniz. Alternatif hosting kullanırken dist içeriğini doğrudan web köküne koyabilirsiniz. `roads.emengin.dev` alan adı GitHub Pages ayarında tanımlıdır; DNS yönlendirmesi ve HTTPS durumu ayrıca kontrol edilmelidir.
+Oyun oyuncu hesabı açmaz; ayarları ve yolculuk günlüğünü bir sunucuya göndermez. Kayıtlar bu tarayıcıda tutulur ve site verileri temizlenerek silinebilir. Siteye bağlanırken barındırma hizmeti standart bağlantı bilgilerini işleyebilir. Güvenlik bildirimi için [SECURITY.md](SECURITY.md) dosyasına bakın.
 
-Teslim ZIP'i oluşturma: önce `npm run build`, ardından `npm run package`. İşlem build'deki lisans bildirimlerini de pakete kopyalar. Çıktı `release/GENCEBAY-ROADS-teslim.zip`.
+Güncel, WebGL 2 destekleyen bir masaüstü tarayıcı ve donanım hızlandırma önerilir. Mobil dokunmatik sürüş, trafik, araç hasarı ve gerçekçi çarpışma simülasyonu bulunmaz. Fizik arcade türündedir; performans cihaz ve grafik ayarlarına göre değişir.
 
-## Doğrulama ve sınırlar
+## Lisans
 
-Otomatik testler: beş aracın üç rota türünde beşer dakikalık pure pursuit sürüşü, yağmur/kar tutuşu, hızlanma–fren–geri, 30/144 FPS fizik eşdeğerliği, 20 km boyunca sabit parça sayısı, parça sınırlarının eşleşmesi, seed ve beş plakanın tam metni/3D yönü.
-
-**Gerçek tarayıcı görsel QA tamamlanamadı:** mevcut bilgisayar kullanım aracı URL'yi güvenle belirleyemediği için durdu. GPU shader çıktısı, gerçek FPS, plakanın ekranda okunabilirliği, PNG indirimi, sesin duyulması ve tüm düğmelerin elle denenmesi henüz doğrulanmış sayılmaz. Teslim öncesi [manuel kontrol listesi](docs/TEST_RAPORU.md) uygulanmalıdır. Slow Roads ile eşdeğer görsel kalite iddiası doğrulanmış değildir.
-
-Fizik rahatlatıcı arcade modelidir; gerçekçi çarpışma, hasar, trafik veya devrilme sistemi yoktur. Direksiyon/fren destekli gamepad uygulandı fakat gerçek cihazla denenmedi. Mobil dokunmatik sürüş ve İngilizce çeviri eklenmedi. Sistem masaüstü klavye/fare deneyimini hedefler. Model ve sesler özgün prosedürel üretimlerdir; fotogerçekçi GLB varlıkları kullanılmadı.
-
-## Lisans ve ilham
-
-MIT — [LICENSE](LICENSE). Bağımlılık bildirimleri: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-
-[Slow Roads](https://slowroads.io/) ve [geliştiricinin resmi Web Edition sayfası](https://topographinteractive.itch.io/slow-roads), rahatlatıcı sonsuz sürüş türüne referans olmuştur. Kod ve içerik kopyalanmamıştır. Bu proje Codex yardımıyla geliştirilmiştir; ayrıntılar sunum rehberindedir.
-
-Üniversite teslim tarihi: **28 Kasım 2026**. Build ve otomatik test raporu geliştirme oturumunda hazırlanmıştır; son kullanıcı cihazında manuel doğrulama için zaman ayrılmalıdır.
+MIT — [LICENSE](LICENSE). Bağımlılık lisansları [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) içinde listelenmiştir. Rahatlatıcı sonsuz sürüş türü için [Slow Roads](https://slowroads.io/) ilham kaynağıdır; kaynak kodu veya içerikleri bu projeye kopyalanmamıştır.

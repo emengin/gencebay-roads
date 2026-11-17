@@ -1,10 +1,10 @@
 # Referans analizi ve mimari kararlar
 
-## İnceleme kapsamı
+## Tasarım referansı
 
-4 Kasım 2026 geliştirme oturumunda [slowroads.io](https://slowroads.io/) doğrudan web aracıyla açıldı. Sayfa JavaScript ağırlıklı olduğu için okunabilir HTML metni elde edilemedi. Etkileşimli tarayıcı açma girişimi, tarayıcı erişim host'unun olmaması nedeniyle başarısız oldu; Windows aracı da mevcut URL'yi güvenle belirleyemediği için durdu. Dolayısıyla referansın kamerası ve sürüşü bizzat oynanarak incelendi denemez.
+[Slow Roads](https://slowroads.io/) ve [resmi Web Edition açıklaması](https://topographinteractive.itch.io/slow-roads), hedef baskısı olmadan manzaralar arasında sürüş fikrine referans olmuştur. GENCEBAY ROADS bu türü kendi araçları, Türkçe arayüzü, fotoğraf modu ve yolculuk günlüğüyle yorumlar.
 
-[Geliştiricinin resmi Web Edition açıklaması](https://topographinteractive.itch.io/slow-roads), sonsuz ve sakin sürüşü, yapılandırılabilir manzaraları ve seed çeşitliliğini doğrular. [Resmi Steam ürün sayfası](https://store.steampowered.com/app/3431300/Slow_Roads/) da manzaralı, amaç baskısı olmayan sürüş fikrini anlatır. Buradan hareketle tasarım hedefi sakin sürüş, ufuk derinliği ve ekranda az sayıda kontrol olarak seçildi. Referansın kapalı kaynak iç uygulaması hakkında kesin algoritma iddiası yapılmadı.
+Referans oyunun kapalı kaynak iç algoritmaları hakkında eşdeğerlik iddiası yoktur. Aşağıdaki yöntemler bu projenin kendi uygulamasını açıklar; harici kod, model veya ses varlıkları kopyalanmamıştır.
 
 ## Gencebay Roads uygulaması
 

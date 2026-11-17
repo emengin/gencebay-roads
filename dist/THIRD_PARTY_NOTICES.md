@@ -2,10 +2,10 @@
 
 Oyun çalışırken internetten model, font, ses, resim veya kod indirmez.
 
-| Bileşen | Sürüm | Lisans | Kullanım |
-| --- | --- | --- | --- |
-| [Three.js](https://threejs.org/) | 0.180.0 | MIT | WebGL çizimi, matematik, geometri ve RoundedBoxGeometry |
-| [Vite](https://vite.dev/) | 6.3.5 | MIT | Yalnızca geliştirme ve production derlemesi |
+| Bileşen                          | Sürüm   | Lisans | Kullanım                                                |
+| -------------------------------- | ------- | ------ | ------------------------------------------------------- |
+| [Three.js](https://threejs.org/) | 0.180.0 | MIT    | WebGL çizimi, matematik, geometri ve RoundedBoxGeometry |
+| [Vite](https://vite.dev/)        | 6.4.6   | MIT    | Yalnızca geliştirme ve production derlemesi             |
 
 Orijinal lisanslar `licenses/THREE-LICENSE.txt` ve `licenses/VITE-LICENSE.txt` içinde korunur. Vite lisans dosyası kendi paketine dahil bağımlılık bildirimlerini de içerir. `package-lock.json`, geliştirme araçlarının tam bağımlılık ağacını sabitler. `npm ci` ile kurulan paketlerin kendi lisans dosyaları node_modules altında yer alır; node_modules teslim ZIP'ine dahil edilmez.
 
